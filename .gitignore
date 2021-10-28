@@ -5,6 +5,7 @@
 *.so
 *.dylib
 route53-dynamic-dns
+_output/
 
 # Test binary, built with `go test -c`
 *.test

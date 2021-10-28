@@ -1,0 +1,15 @@
+[
+  {
+    "records": [
+      "vpn.home.example.com",
+      "ui.home.example.com"
+    ],
+    "recordTypes": ["A", "AAAA"]
+  },
+  {
+    "records": [
+      "vpn6.home.example.com"
+    ],
+    "recordTypes": ["AAAA"]
+  }
+]
