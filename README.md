@@ -38,6 +38,12 @@ Usage of /usr/bin/route53-dynamic-dns:
 First, set up `udm-utilities` from https://github.com/boostchicken/udm-utilities on your Unifi Dream Machine. This utilitiy is very useful with [kchristensen/udm-le](https://github.com/kchristensen/udm-le/) for Lets Encrypt TLS and [wireguard-go](https://github.com/boostchicken/udm-utilities/tree/master/wireguard-go) in udm-utilities.
 
 1. Copy the contents of this repo to your device at `/mnt/data/route53-dynamic-dns`.
+   ```sh
+   docker run -it --rm -v /mnt/data/:/mnt/data/ --net host alpine /bin/sh
+   $ apk -U add git
+   $ cd /mnt/data
+   $ git clone https://github.com/micahhausler/route53-dynamic-dns.git
+   ```
 2. Edit `route53-dynamic-dns.env` and tweak variables to meet your needs.
 3. Edit `records.json` with the records you want created
 4. Run `/mnt/data/route53-dynamic-dnsle/route53-dynamic-dns.sh sync`.

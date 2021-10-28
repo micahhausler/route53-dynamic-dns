@@ -12,9 +12,9 @@ if [ ! -f "${CRON_FILE}" ]; then
 fi
 
 CONTAINER_NAME="route53-dynamic-dns"
-DOCKER_VOLUMES="-v ${CREDENTIAL_DIRECTORY_PATH}:/root/.aws/"
+DOCKER_VOLUMES="-v ${CREDENTIAL_DIRECTORY_PATH}:/root/.aws/ -v ${DYNAMIC_DNS_PATH}:${DYNAMIC_DNS_PATH}"
 PODMAN_CMD="podman run --env-file=${DYNAMIC_DNS_PATH}/route53-dynamic-dns.env -it --name=${CONTAINER_NAME} --network=host --rm ${DOCKER_VOLUMES} ${CONTAINER_IMAGE}:${CONTAINER_IMAGE_TAG}"
-CMD_ARGS="--zone ${ZONE_ID} -i ${IFACE} -r ${RECORD}"
+CMD_ARGS="-z ${ZONE_ID} -i ${IFACE} --config ${DYNAMIC_DNS_PATH}/records.json"
 
 function sync_dns() {
 	$PODMAN_CMD $CMD_ARGS
