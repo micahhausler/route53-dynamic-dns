@@ -51,6 +51,46 @@ First, set up `udm-utilities` from https://github.com/boostchicken/udm-utilities
 5. Copy `on_boot.d/21-dynamic-dns.sh` to `/mnt/data/on_boot.d/`.
    This will ensure that the DNS gets updated and cron is re-created after a system update.
 
+## Required IAM permissions
+
+This application needs the same IAM permissions as [kchristensen/udm-le](https://github.com/kchristensen/udm-le/).
+I ended up just creating an IAM user with the following permissions and shoving credentials in `/mnt/data/udm-le/.secrets/credentials` along with a corresponding profile in `/mnt/data/udm-le/.secrets/config`
+
+```json
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "",
+            "Effect": "Allow",
+            "Action": [
+                "route53:GetChange",
+                "route53:ListResourceRecordSets"
+            ],
+            "Resource": [
+                "arn:aws:route53:::hostedzone/*",
+                "arn:aws:route53:::change/*"
+            ]
+        },
+        {
+            "Sid": "",
+            "Effect": "Allow",
+            "Action": [
+                "route53:ChangeResourceRecordSets"
+            ],
+            "Resource": [
+                "arn:aws:route53:::hostedzone/<YOURZONEID>"
+            ]
+        },
+        {
+            "Sid": "",
+            "Effect": "Allow",
+            "Action": "route53:ListHostedZonesByName",
+            "Resource": "*"
+        }
+    ]
+}
+```
 
 ## LICENSE
 
