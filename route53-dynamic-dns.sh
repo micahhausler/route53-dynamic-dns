@@ -8,7 +8,11 @@ CRON_FILE='/etc/cron.d/rout53-dynamic-dns'
 if [ ! -f "${CRON_FILE}" ]; then
 	echo "2 3 * * * sh ${DYNAMIC_DNS_PATH}/rout53-dynamic-dns.sh renew" > ${CRON_FILE}
 	chmod 644 ${CRON_FILE}
-	/etc/init.d/crond reload ${CRON_FILE}
+    if [ -f /etc/init.d/crond ]; then
+        /etc/init.d/crond reload ${CRON_FILE}
+    else
+        systemctl restart cron
+    fi
 fi
 
 CONTAINER_NAME="route53-dynamic-dns"

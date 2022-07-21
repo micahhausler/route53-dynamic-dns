@@ -46,7 +46,7 @@ First, set up `udm-utilities` from https://github.com/boostchicken/udm-utilities
    ```
 2. Edit `route53-dynamic-dns.env` and tweak variables to meet your needs.
 3. Edit `records.json` with the records you want created
-4. Run `/mnt/data/route53-dynamic-dnsle/route53-dynamic-dns.sh sync`.
+4. Run `/mnt/data/route53-dynamic-dns/route53-dynamic-dns.sh sync`.
    This will handle your initial DNS record and setup a cron task at `/etc/cron.d/route53-dynamic-dns` to attempt a DNS update each morning at 03:02.
 5. Copy `on_boot.d/21-dynamic-dns.sh` to `/mnt/data/on_boot.d/`.
    This will ensure that the DNS gets updated and cron is re-created after a system update.
