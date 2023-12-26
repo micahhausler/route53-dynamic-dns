@@ -1,6 +1,6 @@
 module github.com/micahhausler/route53-dynamic-dns
 
-go 1.21
+go 1.20
 
 require (
 	github.com/aws/aws-sdk-go v1.49.9
