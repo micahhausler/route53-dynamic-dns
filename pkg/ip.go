@@ -2,12 +2,12 @@ package pkg
 
 import (
 	"net"
+	"net/netip"
 
 	"github.com/pkg/errors"
-	"inet.af/netaddr"
 )
 
-func FindPublicAddrs(names ...string) ([]netaddr.IP, error) {
+func FindPublicAddrs(names ...string) ([]netip.Addr, error) {
 	var (
 		ifaces []net.Interface
 		err    error
@@ -29,21 +29,22 @@ func FindPublicAddrs(names ...string) ([]netaddr.IP, error) {
 	return findPublicAddrs(ifaces)
 }
 
-func findPublicAddrs(ifaces []net.Interface) ([]netaddr.IP, error) {
-	resp := []netaddr.IP{}
+func findPublicAddrs(ifaces []net.Interface) ([]netip.Addr, error) {
+	resp := []netip.Addr{}
 	for _, iface := range ifaces {
 		addrs, err := iface.Addrs()
 		if err != nil {
 			return nil, errors.WithStack(err)
 		}
 		for _, addr := range addrs {
-			ipp, err := netaddr.ParseIPPrefix(addr.String())
+			prefix, err := netip.ParsePrefix(addr.String())
 			if err != nil {
 				return nil, errors.WithStack(err)
 			}
-			ip := ipp.IP()
-			if !(ip.IsPrivate() || ip.IsLoopback() || ip.IsLinkLocalUnicast() || ip.IsLinkLocalMulticast() || ip.IsMulticast()) {
-				resp = append(resp, ip)
+
+			addr := prefix.Addr()
+			if !(addr.IsPrivate() || addr.IsLoopback() || addr.IsLinkLocalUnicast() || addr.IsLinkLocalMulticast() || addr.IsMulticast()) {
+				resp = append(resp, addr)
 			}
 		}
 	}

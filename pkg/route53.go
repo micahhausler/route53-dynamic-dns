@@ -3,20 +3,21 @@ package pkg
 import (
 	"encoding/json"
 	"fmt"
+	"net/netip"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/route53"
+	"github.com/aws/aws-sdk-go/service/route53/route53iface"
 	"github.com/pkg/errors"
-	"inet.af/netaddr"
 )
 
 type Updater interface {
-	Update(config Config, ips []netaddr.IP, dryRun bool) error
+	Update(config Config, addrs []netip.Addr, dryRun bool) error
 }
 
 type Route53Updater struct {
-	client        *route53.Route53
+	client        route53iface.Route53API
 	defaultZoneId string
 	defaultTtl    int64
 }
@@ -50,7 +51,7 @@ func NewRoute53Updater(defaultZoneId string, opts ...Route53UpdaterOpt) (Updater
 }
 
 // Update upserts a config's record with the requested IPs
-func (u *Route53Updater) Update(config Config, ips []netaddr.IP, dryRun bool) error {
+func (u *Route53Updater) Update(config Config, addrs []netip.Addr, dryRun bool) error {
 	zoneId := u.defaultZoneId
 	if config.ZoneID != "" {
 		zoneId = config.ZoneID
@@ -63,12 +64,12 @@ func (u *Route53Updater) Update(config Config, ips []netaddr.IP, dryRun bool) er
 	for _, record := range config.Records {
 		ipv4s := []*route53.ResourceRecord{}
 		ipv6s := []*route53.ResourceRecord{}
-		for _, ip := range ips {
-			if ip.Is4() {
-				ipv4s = append(ipv4s, &route53.ResourceRecord{Value: aws.String(ip.String())})
+		for _, addr := range addrs {
+			if addr.Is4() {
+				ipv4s = append(ipv4s, &route53.ResourceRecord{Value: aws.String(addr.String())})
 			}
-			if ip.Is6() {
-				ipv6s = append(ipv6s, &route53.ResourceRecord{Value: aws.String(ip.String())})
+			if addr.Is6() {
+				ipv6s = append(ipv6s, &route53.ResourceRecord{Value: aws.String(addr.String())})
 			}
 		}
 
