@@ -1,0 +1,9 @@
+[Unit]
+Description=Route53 Dynamic DNS daily renewal
+After=unifi.service unifi-core.service
+[Timer]
+OnStartupSec=330
+OnCalendar=*-*-* 03:00:30
+RandomizedDelaySec=330
+[Install]
+WantedBy=timers.target

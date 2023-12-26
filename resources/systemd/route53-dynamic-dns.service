@@ -1,0 +1,10 @@
+[Unit]
+Description=Route53 Dynamic DNS
+[Service]
+Environment=HOME=/root
+EnvironmentFile=-/data/route53-dynamic-dns/route53-dynamic-dns.env
+Type=oneshot
+RemainAfterExit=false
+TimeoutSec=15m
+WorkingDirectory=/data/route53-dynamic-dns
+ExecStart=/data/route53-dynamic-dns/route53-dynamic-dns -z ${ZONE_ID} -i ${IFACE} --config ${CONFIG_FILE}
