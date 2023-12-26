@@ -35,7 +35,11 @@ func SetDefaultTTL(ttl int64) Route53UpdaterOpt {
 
 // NewRoute53Updater initializes a Route53Updater
 func NewRoute53Updater(defaultZoneId string, opts ...Route53UpdaterOpt) (Updater, error) {
-	sess := session.Must(session.NewSession())
+	sess := session.Must(session.NewSession(
+		&aws.Config{
+			CredentialsChainVerboseErrors: aws.Bool(true),
+		},
+	))
 	svc := route53.New(sess)
 
 	resp := &Route53Updater{
